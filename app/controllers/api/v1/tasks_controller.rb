@@ -2,13 +2,14 @@ module Api
   module V1
     class TasksController < ApplicationController
       def index
-        @tasks = Task.order("id asc")
+        @task_views = ::Views::TaskWithAssociatedTag.order("id asc")
       end
 
       def create
         @task = Task.new(task_params)
         if @task.save
-          render 'show'
+          @task_view = ::Views::TaskWithAssociatedTag.find(@task.id)
+          render 'show', status: :created
         else
           render 'errors', errors: @task.errors, status: :bad_request
         end
@@ -31,6 +32,7 @@ module Api
           ::TaskTagsService.new(@task.id, tags).call
         end
 
+        @task_view = ::Views::TaskWithAssociatedTag.find(@task.id)
         render 'show'
       end
 

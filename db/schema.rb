@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_17_032322) do
+ActiveRecord::Schema.define(version: 2020_06_18_010911) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "hstore"
   enable_extension "plpgsql"
 
   create_table "tags", force: :cascade do |t|
@@ -36,4 +37,16 @@ ActiveRecord::Schema.define(version: 2020_06_17_032322) do
 
   add_foreign_key "task_tags", "tags", name: "task_tags_tag_id_fkey", on_delete: :cascade
   add_foreign_key "task_tags", "tasks", name: "task_tags_task_id_fkey", on_delete: :cascade
+
+  create_view "task_with_associated_tags", sql_definition: <<-SQL
+      SELECT tasks.id,
+      tasks.title,
+      tasks.created_at,
+      tasks.updated_at,
+      ( SELECT hstore(array_agg((tags.id)::text), (array_agg(tags.title))::text[]) AS hstore
+             FROM (tags
+               JOIN task_tags ON ((tags.id = task_tags.tag_id)))
+            WHERE (task_tags.task_id = tasks.id)) AS tags
+     FROM tasks;
+  SQL
 end

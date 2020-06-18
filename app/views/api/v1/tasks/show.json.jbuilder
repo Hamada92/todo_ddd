@@ -1,12 +1,12 @@
 json.data do
-  json.partial! 'task', task: @task
+  json.partial! 'task', task: @task_view
 
   json.relationships do
     json.tags do
       json.data do
-        json.array! @task.tags do |tag|
-          json.id tag.id.to_s
-          json.title tag.title
+        json.array! @task_view.tags do |tag|
+          json.id tag.first
+          json.title tag.last
         end
       end
     end

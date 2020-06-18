@@ -3,7 +3,7 @@ class TaskTagsService
 
   def initialize(task_id, tags=[], full_replacement: false)
     @task_id = task_id
-    @tags = tags.filter { |tag| tag.present? } # Remove blank values
+    @tags = Array.wrap(tags).filter { |tag| tag.present? } # Remove blank values
     @full_replacement = full_replacement
   end
 
