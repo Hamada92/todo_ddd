@@ -10,6 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2020_06_17_032322) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "tags", force: :cascade do |t|
+    t.string "title", default: "", null: false
+    t.string "code", default: ""
+    t.index ["title"], name: "index_tags_on_title", unique: true
+  end
+
+  create_table "task_tags", id: :serial, force: :cascade do |t|
+    t.integer "tag_id", null: false
+    t.integer "task_id", null: false
+    t.index ["tag_id"], name: "tag_id_task_tags"
+    t.index ["task_id", "tag_id"], name: "tag_id_task_id_task_tags", unique: true
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.text "title", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "task_tags", "tags", name: "task_tags_tag_id_fkey", on_delete: :cascade
+  add_foreign_key "task_tags", "tasks", name: "task_tags_task_id_fkey", on_delete: :cascade
 end

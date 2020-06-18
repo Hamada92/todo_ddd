@@ -5,3 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+
+
+tag = Tag.create(title: 'Today')
+task = Task.create(title: 'Wash laundry')
+task.task_tags.create(tag_id: tag.id)
+

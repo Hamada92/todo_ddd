@@ -321,8 +321,8 @@
 									"var jsonData = JSON.parse(responseBody);",
 									"tests[\"Created Title check\"] = jsonData.data.attributes.title === \"Updated Task Title\";",
 									"tests[\"ID exists check\"] = jsonData.data.id  === \"2\";",
-									"tests[\"Added Tags check\"] = jsonData.data[0].relationships.tags.data[0].id === \"2\";",
-									"tests[\"Added Tags check\"] = jsonData.data[0].relationships.tags.data[1].id === \"3\";"
+									"tests[\"Added Tags check\"] = jsonData.data.relationships.tags.data[0].id > 0;",
+									"tests[\"Added Tags check\"] = jsonData.data.relationships.tags.data[1].id > 0;"
 								]
 							}
 						}
