@@ -26,7 +26,7 @@ RSpec.describe "Task", :type => :request do
         headers = { "ACCEPT" => "application/json" }
         patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  ""} } }, :headers => headers
 
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 

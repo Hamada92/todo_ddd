@@ -2,7 +2,7 @@ module Api
   module V1
     class TasksController < ApplicationController
       def index
-        @task_views = ::Views::TaskWithAssociatedTag.order("id asc")
+        @task_views = ::Views::TaskWithAssociatedTag.page(params[:page]).order("id asc")
       end
 
       def create
@@ -11,7 +11,8 @@ module Api
           @task_view = ::Views::TaskWithAssociatedTag.find(@task.id)
           render 'show', status: :created
         else
-          render 'errors', errors: @task.errors, status: :bad_request
+          @errors = @task.errors
+          render 'api/v1/errors/errors', status: :unprocessable_entity
         end
 
       end
@@ -22,18 +23,37 @@ module Api
 
         unless @task.valid?
           @errors = @task.errors
-          render 'errors', status: :bad_request
+          render 'api/v1/errors/errors', status: :unprocessable_entity
           return
         end
 
-        # Use transaction to guarantee Atomicity of tasks and tags
+        tag_service = ::TaskTagsService.new(@task.id, tags)
+
         ActiveRecord::Base.transaction do
           @task.save!
-          ::TaskTagsService.new(@task.id, tags).call
+          tag_service.call
+        end
+
+        if tag_service.errors.present?
+          @errors = tag_service.errors
+          render 'api/v1/errors/errors', status: :unprocessable_entity
+          return
         end
 
         @task_view = ::Views::TaskWithAssociatedTag.find(@task.id)
         render 'show'
+      end
+
+      def destroy
+        @task = Task.find_by(id: params[:id])
+        # https://jsonapi.org/format/#crud-deleting-responses-404
+        if @task.blank?
+          head :not_found
+          return
+        end
+
+        @task.destroy
+        head :no_content
       end
 
       private

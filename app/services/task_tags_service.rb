@@ -1,5 +1,5 @@
 class TaskTagsService
-  attr_reader :task_id, :tags, :full_replacement
+  attr_reader :task_id, :tags, :full_replacement, :errors
 
   def initialize(task_id, tags=[], full_replacement: false)
     @task_id = task_id
@@ -10,14 +10,19 @@ class TaskTagsService
   def call
     return unless tags.present?
 
-    if full_replacement
-      task.tags.destroy_all
+    begin
+      ActiveRecord::Base.transaction do
+        task.tags.destroy_all if full_replacement
+        tags.each do |tag_title|
+          tag = Tag.where(title: tag_title).first_or_create!
+          task.task_tags.where(tag_id: tag.id).first_or_create!
+        end
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      @errors = e.record.errors
     end
 
-    tags.each do |tag_title|
-      tag = Tag.where(title: tag_title).first_or_create!
-      task.task_tags.where(tag_id: tag.id).first_or_create!
-    end
+    return errors if errors.present?
   end
 
   private

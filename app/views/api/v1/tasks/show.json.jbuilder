@@ -5,8 +5,7 @@ json.data do
     json.tags do
       json.data do
         json.array! @task_view.tags do |tag|
-          json.id tag.first
-          json.title tag.last
+          json.partial! 'tag', tag: tag
         end
       end
     end

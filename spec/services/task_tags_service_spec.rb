@@ -8,6 +8,11 @@ describe TaskTagsService do
     expect(task.tags.pluck(:title)).to eq(["Tag", "Tag2"])
   end
 
+  it 'does not duplicate tags' do
+    described_class.new(task.id, ["Tag", "Tag", "Tag"]).call
+    expect(task.tags.pluck(:title)).to eq(["Tag"])
+  end
+
   context 'with full_replacement' do
     before(:each) do
       tag = create(:tag)

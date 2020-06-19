@@ -13,6 +13,10 @@ gem 'jbuilder', '~> 2.5'
 gem 'pg'
 # SQL views
 gem 'scenic'
+# Pagination
+gem 'kaminari'
+# JSON tests
+gem 'json_spec'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

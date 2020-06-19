@@ -6,11 +6,18 @@ json.data do
       json.tags do
         json.data do
           json.array! task.tags do |tag|
-            json.id tag.first
-            json.title tag.last
+            json.partial! 'tag', tag: tag
           end
         end
       end
     end
   end
+end
+
+json.links do
+  json.partial! 'links', collection: @task_views
+end
+
+json.meta do
+  json.total_pages @task_views.total_pages
 end
