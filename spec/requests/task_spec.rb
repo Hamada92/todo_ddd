@@ -8,6 +8,7 @@ RSpec.describe "Task", :type => :request do
 
     expect(response.content_type).to eq("application/json")
     expect(response).to have_http_status(:created)
+    expect(response).to render_template(:show)
   end
 
   context "Task Update" do
@@ -18,6 +19,7 @@ RSpec.describe "Task", :type => :request do
       patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  "Test Task"} } }, :headers => headers
 
       expect(response).to have_http_status(:ok)
+      expect(response).to render_template(:show)
       expect(task.reload.title).to eq("Test Task")
     end
 
@@ -27,6 +29,7 @@ RSpec.describe "Task", :type => :request do
         patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  ""} } }, :headers => headers
 
         expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to render_template(:errors)
       end
     end
 

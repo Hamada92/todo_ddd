@@ -15,8 +15,6 @@ gem 'pg'
 gem 'scenic'
 # Pagination
 gem 'kaminari'
-# JSON tests
-gem 'json_spec'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -34,6 +32,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 3.9'
   gem 'rspec_junit_formatter'
+  gem 'rails-controller-testing'
   gem 'factory_bot_rails'
 end
 
