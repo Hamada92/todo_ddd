@@ -35,8 +35,6 @@ Created a SQL view under `db/views` that gets tasks along with their associated 
 
 Under the `services` folder, I created a service object that encapsulates the logic for updating/tagging a task, and tested separately in Rspec. This could've also been part of the task model, or even a Taggable concern that's included in the model, but its my opinion that as models tend to grow too big, services can help with keeping the models at moderate size.
 
-I had to make a choice whether to make the bridge table (task_tags) polymprphic, so that in the future it could be used to tag other models (e.g. Article), but polymorphic associations ignore referential integrity in the database, which is something that shouldn't be sacrificed, so I decided against it.
-
 I had to make 2 small changes to the postman-test file: 
 1. Remove the `[0]` from line 324 and 325
 2. Expect the tag id to be any number greater than 0, instead of specifically expecting ids 2 and 3 (which changes from database to another and could lead to test failures.)
@@ -54,11 +52,11 @@ I paginated the tasks index usign Kaminari, the json payload will include these 
 
 this format is compliant with JSON API requirement.
 
-To get a specific page of record, pass the query param `page`, e.g. `localhost:3000/api/v1/tasks?page=2`
+To get a specific page of records, pass the query param `page`, e.g. `localhost:3000/api/v1/tasks?page=2`
 
 # Errors
 
-If an api operation is not successful, the errors  are rendered as json and a status code 422 is returned.
+If an api operation is not successful, the errors are rendered as json and a status code 422 is returned.
 
 # Notes
 
