@@ -1,6 +1,6 @@
 class Tag < ApplicationRecord
-  validates :title, presence: true
-  validates_uniqueness_of :title
+  validates :title, presence: { message: "Tag title is required" }
+  validates_uniqueness_of :title, message: "Tag title already exists"
 
   before_save :set_code
 

@@ -15,6 +15,8 @@ gem 'pg'
 gem 'scenic'
 # Pagination
 gem 'kaminari'
+# Code lint
+gem 'rubocop'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -34,6 +36,8 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'rails-controller-testing'
   gem 'factory_bot_rails'
+  gem 'database_cleaner-active_record'
+  gem 'simplecov', require: false
 end
 
 group :development do

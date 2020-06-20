@@ -2,26 +2,32 @@ require 'rails_helper'
 
 describe TaskTagsService do
   let(:task) { create(:task) }
-
-  it 'creates tags' do
-    described_class.new(task.id, ["Tag", "Tag2", ""]).call
-    expect(task.tags.pluck(:title)).to eq(["Tag", "Tag2"])
+  let(:task_params) do
+    {
+      title: 'New Title',
+      tags: ["Home", "Fun"]
+    }
   end
 
-  it 'does not duplicate tags' do
-    described_class.new(task.id, ["Tag", "Tag", "Tag"]).call
-    expect(task.tags.pluck(:title)).to eq(["Tag"])
+  it 'updates the task' do
+    described_class.new(task.id, task_params).call
+    expect(task.reload.title).to eq("New Title")
   end
 
-  context 'with full_replacement' do
+  it 'creates tags without duplicates' do
+    described_class.new(task.id, task_params).call
+    expect(task.tags.pluck(:title)).to eq(["Home", "Fun"])
+  end
+
+  context 'with full_tag_replacement' do
     before(:each) do
       tag = create(:tag)
       task.task_tags.create(tag_id: tag.id)
     end
 
     it 'destroy existing tags and replaces them with the new ones' do
-      expect { described_class.new(task.id, ["New"], full_replacement: true).call }.
-        to change { task.tags.pluck(:title) }.from(["Test Tag"]).to(["New"])
+      expect { described_class.new(task.id, task_params, full_tag_replacement: true).call }.
+        to change { task.tags.pluck(:title) }.from(["Test Tag"]).to(["Home", "Fun"])
     end
   end
 end

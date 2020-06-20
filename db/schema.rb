@@ -16,10 +16,13 @@ ActiveRecord::Schema.define(version: 2020_06_18_010911) do
   enable_extension "hstore"
   enable_extension "plpgsql"
 
-  create_table "tags", force: :cascade do |t|
-    t.string "title", default: "", null: false
-    t.string "code", default: ""
-    t.index ["title"], name: "index_tags_on_title", unique: true
+  create_table "tags", id: :serial, force: :cascade do |t|
+    t.text "title", default: "", null: false
+    t.text "code", default: "", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["code"], name: "code_tags", unique: true
+    t.index ["code"], name: "title_tags", unique: true
   end
 
   create_table "task_tags", id: :serial, force: :cascade do |t|
@@ -29,10 +32,10 @@ ActiveRecord::Schema.define(version: 2020_06_18_010911) do
     t.index ["task_id", "tag_id"], name: "tag_id_task_id_task_tags", unique: true
   end
 
-  create_table "tasks", force: :cascade do |t|
+  create_table "tasks", id: :serial, force: :cascade do |t|
     t.text "title", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_foreign_key "task_tags", "tags", name: "task_tags_tag_id_fkey", on_delete: :cascade
@@ -43,7 +46,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_010911) do
       tasks.title,
       tasks.created_at,
       tasks.updated_at,
-      ( SELECT hstore(array_agg((tags.id)::text), (array_agg(tags.title))::text[]) AS hstore
+      ( SELECT hstore(array_agg((tags.id)::text), array_agg(tags.title)) AS hstore
              FROM (tags
                JOIN task_tags ON ((tags.id = task_tags.tag_id)))
             WHERE (task_tags.task_id = tasks.id)) AS tags

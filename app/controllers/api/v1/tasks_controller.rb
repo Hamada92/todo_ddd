@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Api
   module V1
     class TasksController < ApplicationController
       def index
-        @task_views = ::Views::TaskWithAssociatedTag.page(params[:page]).order("id asc")
+        @task_views = ::Views::TaskWithAssociatedTag.page(params[:page]).order('id asc')
       end
 
       def create
@@ -14,33 +16,19 @@ module Api
           @errors = @task.errors
           render 'api/v1/errors/errors', status: :unprocessable_entity
         end
-
       end
 
       def update
-        @task = Task.find(params[:id])
-        @task.assign_attributes(task_params.except(:tags))
+        service = ::TaskTagsService.new(params[:id], task_params)
+        service.call
 
-        unless @task.valid?
-          @errors = @task.errors
+        if service.errors.present?
+          @errors = service.errors
           render 'api/v1/errors/errors', status: :unprocessable_entity
           return
         end
 
-        tag_service = ::TaskTagsService.new(@task.id, tags)
-
-        ActiveRecord::Base.transaction do
-          @task.save!
-          tag_service.call
-        end
-
-        if tag_service.errors.present?
-          @errors = tag_service.errors
-          render 'api/v1/errors/errors', status: :unprocessable_entity
-          return
-        end
-
-        @task_view = ::Views::TaskWithAssociatedTag.find(@task.id)
+        @task_view = ::Views::TaskWithAssociatedTag.find(params[:id])
         render 'show'
       end
 

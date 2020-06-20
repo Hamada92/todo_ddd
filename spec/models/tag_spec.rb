@@ -15,7 +15,7 @@ describe Tag do
 
   end
 
-  it 'creates a code out of the title' do
+  it 'sets the tag code' do
     expect(create(:tag, title: 'New Tag').code).to eq('new_tag')
   end
 end
