@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# This service is responside for updating a task. Update might include tagging as well.
+
 class TaskTagsService
   attr_reader :task_id, :task_params, :full_tag_replacement, :errors
 

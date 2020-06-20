@@ -14,7 +14,6 @@ module Api
         else
           render_errors
         end
-
       end
 
       def update
