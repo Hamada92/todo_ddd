@@ -2,7 +2,7 @@
 
 This app requires ruby `2.6.5`, as specified in `.ruby-verson` file. Rails `5.2.4.1`
 
-The app uses PostgreSQL as the Databse.
+The app uses PostgreSQL as the Database.
 
 after cloning the repo, run `rake db:create && rake db:migrate && rake db:seed`  then `bundle install`.
 To run the tests run `bundle exec rspec`,
@@ -22,9 +22,9 @@ I've used some gems to help with development:
 # Models and API
 
 I created 3 tables and 1 View:
-Tasks
-Tags
-TaskTags
+Task
+Tag
+TaskTag
 TaskWithAssociatedTag (SQL view)
 
 Task and Tag has a many-to-many relationship.
