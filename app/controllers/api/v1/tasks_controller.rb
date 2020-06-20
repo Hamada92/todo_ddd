@@ -33,14 +33,9 @@ module Api
       end
 
       def destroy
-        @task = Task.find_by(id: params[:id])
-        # https://jsonapi.org/format/#crud-deleting-responses-404
-        if @task.blank?
-          head :not_found
-          return
-        end
-
+        @task = Task.find(params[:id])
         @task.destroy
+
         head :no_content
       end
 
