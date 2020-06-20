@@ -58,7 +58,7 @@ To get a specific page of record, pass the query param `page`, e.g. `localhost:3
 
 # Errors
 
-If an api operation is not successful, I render the errors as json and return a 422 status code.
+If an api operation is not successful, the errors  are rendered as json and a status code 422 is returned.
 
 # Notes
 
