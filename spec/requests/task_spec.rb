@@ -10,6 +10,7 @@ RSpec.describe "Task", :type => :request do
       expect(response.content_type).to eq("application/json")
       expect(response).to have_http_status(:created)
       expect(response).to render_template(:show)
+      expect(JSON.parse(response.body)["data"]["attributes"]["title"]).to eq("Test Task")
     end
   end
 
@@ -18,11 +19,12 @@ RSpec.describe "Task", :type => :request do
 
     it "updates a Task" do
       headers = { "ACCEPT" => "application/json" }
-      patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  "Test Task"} } }, :headers => headers
+      patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  "New Test Task"} } }, :headers => headers
 
       expect(response).to have_http_status(:ok)
       expect(response).to render_template(:show)
-      expect(task.reload.title).to eq("Test Task")
+      expect(task.reload.title).to eq("New Test Task")
+      expect(JSON.parse(response.body)["data"]["attributes"]["title"]).to eq("New Test Task")
     end
 
     context "with empty title" do
@@ -32,6 +34,8 @@ RSpec.describe "Task", :type => :request do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:errors)
+        expect(JSON.parse(response.body)["errors"][0]["detail"][0]).to include("title is required")
+
       end
     end
 

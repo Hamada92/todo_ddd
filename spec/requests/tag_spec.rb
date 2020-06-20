@@ -10,6 +10,7 @@ RSpec.describe "Tag", :type => :request do
       expect(response.content_type).to eq("application/json")
       expect(response).to have_http_status(:created)
       expect(response).to render_template(:show)
+      expect(JSON.parse(response.body)["data"]["attributes"]["title"]).to eq("Test Tag")
     end
   end
 
@@ -23,6 +24,7 @@ RSpec.describe "Tag", :type => :request do
       expect(response).to have_http_status(:ok)
       expect(response).to render_template(:show)
       expect(tag.reload.title).to eq("New Test Tag")
+      expect(JSON.parse(response.body)["data"]["attributes"]["title"]).to eq("New Test Tag")
     end
 
     context "with empty title" do
@@ -32,6 +34,7 @@ RSpec.describe "Tag", :type => :request do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:errors)
+        expect(JSON.parse(response.body)["errors"][0]["detail"][0]).to include("title is required")
       end
     end
   end
