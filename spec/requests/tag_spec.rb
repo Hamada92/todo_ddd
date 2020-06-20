@@ -1,0 +1,38 @@
+require "rails_helper"
+
+RSpec.describe "Tag", :type => :request do
+
+  context "create tag" do
+    it "creates a Tag" do
+      headers = { "ACCEPT" => "application/json" }
+      post "/api/v1/tags", params: { data: { attributes: {title:  "Test Tag"} } }, :headers => headers
+
+      expect(response.content_type).to eq("application/json")
+      expect(response).to have_http_status(:created)
+      expect(response).to render_template(:show)
+    end
+  end
+
+  context "update task" do
+    let(:tag) { create(:tag) }
+
+    it "updates a Tag" do
+      headers = { "ACCEPT" => "application/json" }
+      patch "/api/v1/tags/#{tag.id}", params: { data: { attributes: {title:  "New Test Tag"} } }, :headers => headers
+
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template(:show)
+      expect(tag.reload.title).to eq("New Test Tag")
+    end
+
+    context "with empty title" do
+      it "returns an error" do
+        headers = { "ACCEPT" => "application/json" }
+        patch "/api/v1/tags/#{tag.id}", params: { data: { attributes: {title:  ""} } }, :headers => headers
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to render_template(:errors)
+      end
+    end
+  end
+end

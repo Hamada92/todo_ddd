@@ -10,7 +10,7 @@ module Api
       def create
         @tag = Tag.new(tag_params)
         if @tag.save
-          render 'show'
+          render 'show', status: :created
         else
           render_errors
         end
