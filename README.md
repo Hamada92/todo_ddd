@@ -38,8 +38,8 @@ Under the `services` folder, I created a service object that encapsulates the lo
 I had to make a choice whether to make the bridge table (task_tags) polymprphic, so that in the future it could be used to tag other models (e.g. Article), but polymorphic associations ignore referential integrity in the database, which is something that shouldn't be sacrificed, so I decided against it.
 
 I had to make 2 small changes to the postman-test file: 
-1. Remove the `[0]` from line 323 and 325
-2. Expect the tag id to be any number greater than 0, instead of specifically expecting ids 2 and 3 (which changes from database to another)
+1. Remove the `[0]` from line 324 and 325
+2. Expect the tag id to be any number greater than 0, instead of specifically expecting ids 2 and 3 (which changes from database to another and could lead to test failures.)
 
 Please re-import the postman-test file into Postman again using the version in this repo, since it has minor changes, then run the collection, should all be green.
 
@@ -56,9 +56,12 @@ this format is compliant with JSON API requirement.
 
 To get a specific page of record, pass the query param `page`, e.g. `localhost:3000/api/v1/tasks?page=2`
 
+# Errors
+
+If an api operation is not successful, I render the errors as json and return a 422 status code.
 
 # Notes
 
-1. in postman-test.json, the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag title's.
+1. in postman-test.json, the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag titles.
 
 
