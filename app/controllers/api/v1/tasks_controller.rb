@@ -8,7 +8,7 @@ module Api
       end
 
       def create
-        @task = Task.new(task_params)
+        @task = Task.new(task_attributes)
         if @task.save
           @task_view = ::Views::TaskWithAssociatedTag.find(@task.id)
           render 'show', status: :created
@@ -48,11 +48,11 @@ module Api
       private
 
       def task_params
-        params.require(:data).require(:attributes).permit(:title, tags: [])
+        params.require(:data).permit(:type, attributes: [:title, tags: [] ] )
       end
 
-      def tags
-        task_params[:tags]
+      def task_attributes
+        task_params[:attributes]
       end
     end
   end

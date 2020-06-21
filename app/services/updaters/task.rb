@@ -30,11 +30,11 @@ class Updaters::Task
   end
 
   def tags
-    Array.wrap(task_params[:tags]).filter(&:present?)
+    Array.wrap(task_params.dig(:attributes, :tags)).filter(&:present?)
   end
 
   def task_params_without_tags
-    task_params.except(:tags)
+    task_params[:attributes].except(:tags)
   end
 
   def create_tags

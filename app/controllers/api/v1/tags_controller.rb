@@ -8,7 +8,7 @@ module Api
       end
 
       def create
-        @tag = Tag.new(tag_params)
+        @tag = Tag.new(tag_attributes)
         if @tag.save
           render 'show', status: :created
         else
@@ -18,7 +18,7 @@ module Api
 
       def update
         @tag = Tag.find(params[:id])
-        if @tag.update(tag_params)
+        if @tag.update(tag_attributes)
           render 'show'
         else
           render_errors
@@ -28,7 +28,11 @@ module Api
       private
 
       def tag_params
-        params.require(:data).require(:attributes).permit(:title)
+        params.require(:data).permit(attributes: [:title])
+      end
+
+      def tag_attributes
+        tag_params[:attributes]
       end
 
       def render_errors

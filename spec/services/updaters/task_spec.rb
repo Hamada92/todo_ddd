@@ -4,8 +4,10 @@ describe Updaters::Task do
   let(:task) { create(:task) }
   let(:task_params) do
     {
-      title: 'New Title',
-      tags: ["Home", "Fun"]
+      attributes: {
+        title: 'New Title',
+        tags: ["Home", "Fun"]
+      }
     }
   end
 

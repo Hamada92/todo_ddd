@@ -1,16 +1,16 @@
 require "rails_helper"
 
 RSpec.describe "Task", :type => :request do
+  let(:headers) { { "ACCEPT" => "application/vnd.api+json" } }
 
   context "create task" do
     it "creates a Task" do
-      headers = { "ACCEPT" => "application/json" }
       post "/api/v1/tasks", params: { data: { attributes: {title:  "Test Task"} } }, :headers => headers
 
-      expect(response.content_type).to eq("application/json")
+      expect(response.content_type).to eq("application/vnd.api+json")
       expect(response).to have_http_status(:created)
       expect(response).to render_template(:show)
-      expect(JSON.parse(response.body)["data"]["attributes"]["title"]).to eq("Test Task")
+      expect(JSON.parse(response.body).dig("data", "attributes", "title")).to eq("Test Task")
     end
   end
 
@@ -18,18 +18,16 @@ RSpec.describe "Task", :type => :request do
     let(:task) { create(:task) }
 
     it "updates a Task" do
-      headers = { "ACCEPT" => "application/json" }
       patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  "New Test Task"} } }, :headers => headers
 
       expect(response).to have_http_status(:ok)
       expect(response).to render_template(:show)
       expect(task.reload.title).to eq("New Test Task")
-      expect(JSON.parse(response.body)["data"]["attributes"]["title"]).to eq("New Test Task")
+      expect(JSON.parse(response.body).dig("data", "attributes", "title")).to eq("New Test Task")
     end
 
     context "with empty title" do
       it "returns an error" do
-        headers = { "ACCEPT" => "application/json" }
         patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  ""} } }, :headers => headers
 
         expect(response).to have_http_status(:unprocessable_entity)
@@ -41,7 +39,6 @@ RSpec.describe "Task", :type => :request do
 
     context "with tags" do
       it "updates the task and assigns the tags" do
-        headers = { "ACCEPT" => "application/json" }
         patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  "Test Task", tags: ["Today", "Tomorrow"]} } }, :headers => headers
 
         expect(response).to have_http_status(:ok)
@@ -55,7 +52,6 @@ RSpec.describe "Task", :type => :request do
 
     context "task exists" do
       it "destroys the task and returns :no_content status" do
-        headers = { "ACCEPT" => "application/json" }
         delete "/api/v1/tasks/#{task.id}", :headers => headers
 
         expect(response).to have_http_status(:no_content)
@@ -64,7 +60,6 @@ RSpec.describe "Task", :type => :request do
 
     context "task does not exist" do
       it "returns :not_found status" do
-        headers = { "ACCEPT" => "application/json" }
         delete "/api/v1/tasks/123456", :headers => headers
 
         expect(response).to have_http_status(:not_found)

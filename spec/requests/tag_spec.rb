@@ -1,13 +1,13 @@
 require "rails_helper"
 
 RSpec.describe "Tag", :type => :request do
+  let(:headers) { { "ACCEPT" => "application/vnd.api+json" } }
 
   context "create tag" do
     it "creates a Tag" do
-      headers = { "ACCEPT" => "application/json" }
       post "/api/v1/tags", params: { data: { attributes: {title:  "Test Tag"} } }, :headers => headers
 
-      expect(response.content_type).to eq("application/json")
+      expect(response.content_type).to eq("application/vnd.api+json")
       expect(response).to have_http_status(:created)
       expect(response).to render_template(:show)
       expect(JSON.parse(response.body)["data"]["attributes"]["title"]).to eq("Test Tag")
@@ -18,7 +18,6 @@ RSpec.describe "Tag", :type => :request do
     let(:tag) { create(:tag) }
 
     it "updates a Tag" do
-      headers = { "ACCEPT" => "application/json" }
       patch "/api/v1/tags/#{tag.id}", params: { data: { attributes: {title:  "New Test Tag"} } }, :headers => headers
 
       expect(response).to have_http_status(:ok)
@@ -29,7 +28,6 @@ RSpec.describe "Tag", :type => :request do
 
     context "with empty title" do
       it "returns an error" do
-        headers = { "ACCEPT" => "application/json" }
         patch "/api/v1/tags/#{tag.id}", params: { data: { attributes: {title:  ""} } }, :headers => headers
 
         expect(response).to have_http_status(:unprocessable_entity)
