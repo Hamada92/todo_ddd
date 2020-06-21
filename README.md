@@ -33,7 +33,7 @@ In the migrations, I chose to use pure SQL to build my tables, it gives me more 
 
 Created a SQL view under `db/views` that gets tasks along with their associated tags using the hstore datatype in postgres (tag_id: tag_name), I did this because getting a task along with its tags is a frequent operation which could lead to N+1 problems, using this View will issue one query only.
 
-Under the `services` folder, I implemented the factory method pattern, which builds an instance of the updater class (in this case a Task updater). If in the future we need to tag an Article or a Question, it's easy to extend.
+Under the `services` folder, I implemented the factory method pattern, which builds an instance of the updater class (in this case a Task updater). If in the future we need to tag an Article or a Question, it's easy to extend it.
 
 I had to make 2 small changes to the postman-test file: 
 1. Remove the `[0]` from line 324 and 325
