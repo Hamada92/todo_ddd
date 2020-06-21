@@ -19,7 +19,8 @@ module Api
       end
 
       def update
-        service = ::TaskTagsService.new(params[:id], task_params)
+        task = Task.find(params[:id])
+        service = ::Updaters::Factory.build(task, task_params)
         service.call
 
         if service.errors.present?
@@ -33,9 +34,14 @@ module Api
       end
 
       def destroy
-        @task = Task.find(params[:id])
-        @task.destroy
+        @task = Task.find_by(id: params[:id])
 
+        if @task.blank?
+          head :not_found
+          return
+        end
+
+        @task.destroy
         head :no_content
       end
 

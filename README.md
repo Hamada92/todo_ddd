@@ -33,7 +33,7 @@ In the migrations, I chose to use pure SQL to build my tables, it gives me more 
 
 Created a SQL view under `db/views` that gets tasks along with their associated tags using the hstore datatype in postgres (tag_id: tag_name), I did this because getting a task along with its tags is a frequent operation which could lead to N+1 problems, using this View will issue one query only.
 
-Under the `services` folder, I created a service object that encapsulates the logic for updating/tagging a task, and tested separately in Rspec. This could've also been part of the task model, or even a Taggable concern that's included in the model, but its my opinion that as models tend to grow too big, services can help with keeping the models at moderate size.
+Under the `services` folder, I implemented the factory method pattern, which builds an instance of the updater class (in this case a Task updater). If in the future we need to tag an Article or a Question, it's easy to extend.
 
 I had to make 2 small changes to the postman-test file: 
 1. Remove the `[0]` from line 324 and 325
