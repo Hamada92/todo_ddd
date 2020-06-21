@@ -11,7 +11,7 @@ To run the tests run `bundle exec rspec`,
 
 # Gems
 
-I've used some gems to help with development:
+I used some gems to help with development:
 
 1. Jbuilder for JSON responses.
 2. Scenic to build SQL views in PostgreSQL.
@@ -33,7 +33,7 @@ In the migrations, I chose to use pure SQL to build my tables, it gives me more 
 
 Created a SQL view under `db/views` that gets tasks along with their associated tags using the hstore datatype in postgres (tag_id: tag_name), I did this because getting a task along with its tags is a frequent operation which could lead to N+1 problems, using this View will issue one query only.
 
-Under the `services` folder, I implemented the factory method pattern, which builds an instance of the updater class (in this case a Task updater). If in the future we need to tag an Article or a Question, it's easy to extend it.
+Under the `services` folder, I implemented the Factory Method pattern, which builds an instance of the updater class (in this case a Task updater). If in the future we need to tag an Article or a Question, it's easy to extend it.
 
 I had to make 2 small changes to the postman-test file: 
 1. Remove the `[0]` from line 324 and 325
@@ -60,13 +60,13 @@ If an api operation is not successful, the errors are rendered as json and a sta
 
 # Notes
 
-1. in postman-test.json, the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag titles.
+1. in postman-test.json, for the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag titles.
 2. I used default sorting of "id asc", ideally it should be "id desc", but for postman index test to pass, it needs to be "asc".
 
 # Future Improvements
 
 1. Implement sorting compliant with JSON:API.
 2. Implement documentation using slate or apipie-rails.
-3. Imlement authentication (e.g. by token, or jwt).
+3. Implement authentication (e.g. by token, or jwt).
 
-
+# Thank you and have a good day.
