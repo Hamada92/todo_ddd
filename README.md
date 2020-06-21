@@ -60,10 +60,13 @@ If an api operation is not successful, the errors are rendered as json and a sta
 
 # Notes
 
-in postman-test.json, the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag titles.
+1. in postman-test.json, the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag titles.
+2. I used default sorting of "id asc", ideally it should be "id desc", but for postman index test to pass, it needs to be "asc".
 
-
-# Improvements
+# Future Improvements
 
 1. Implement sorting compliant with JSON:API.
+2. Implement documentation using slate or apipie-rails.
+3. Imlement authentication (e.g. by token, or jwt).
+
 
