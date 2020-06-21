@@ -60,6 +60,10 @@ If an api operation is not successful, the errors are rendered as json and a sta
 
 # Notes
 
-1. in postman-test.json, the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag titles.
+in postman-test.json, the request to create a tag (POST localhost:3000/v1/api/tags), the test will pass the first time, but on consequent tries, it will return a 422 code since the api doesn't allow duplicate tag titles.
 
+
+# Improvements
+
+1. Implement sorting compliant with JSON:API.
 
