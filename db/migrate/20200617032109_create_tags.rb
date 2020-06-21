@@ -11,7 +11,7 @@ class CreateTags < ActiveRecord::Migration[5.2]
         primary key(id)
       );
 
-      CREATE UNIQUE INDEX title_tags on tags(code);
+      CREATE UNIQUE INDEX title_tags on tags(title);
       CREATE UNIQUE INDEX code_tags on tags(code);
     SQL
   end

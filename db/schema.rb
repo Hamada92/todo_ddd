@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_010911) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["code"], name: "code_tags", unique: true
-    t.index ["code"], name: "title_tags", unique: true
+    t.index ["title"], name: "title_tags", unique: true
   end
 
   create_table "task_tags", id: :serial, force: :cascade do |t|
