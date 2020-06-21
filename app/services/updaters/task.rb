@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Updaters::Task
   attr_reader :task_id, :task_params, :full_tag_replacement, :errors
 

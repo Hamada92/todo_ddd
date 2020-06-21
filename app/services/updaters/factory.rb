@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Updaters
   class Factory
     KLASSES = [
-      Updaters::Task,
-      #Article (in future)
-    ]
+      Updaters::Task
+      # Article (in future)
+    ].freeze
 
     def self.build(object, params, full_tag_replacement: false)
       updater = KLASSES.detect { |klass| klass.class_type_matches?(object) }
