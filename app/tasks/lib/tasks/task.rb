@@ -1,5 +1,4 @@
 require 'aggregate_root'
-require 'securerandom'
 
 module Tasks
   class Task
@@ -14,15 +13,23 @@ module Tasks
       apply(TaskSubmitted.strict(data:
         {
           aggregate_id: aggregate_id,
-          title: title
+          title: title,
         }))
+    end
+
+    def edit
+      apply(TaskTitleUpdated.strict(data:
+      {
+        aggregate_id: aggregate_id,
+        title: title,
+      }))
     end
 
     def add_tag(tag_title:)
       apply(TagAdded.strict(data:
       {
         aggregate_id: aggregate_id,
-        title: tag_title
+        title: tag_title,
       }))
     end
 
@@ -32,7 +39,10 @@ module Tasks
     end
 
     on TagAdded do |event|
+    end
 
+    on TaskTitleUpdated do |event|
+      @title = event.data.fetch(:title)
     end
 
     private
