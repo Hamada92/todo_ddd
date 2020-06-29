@@ -5,6 +5,7 @@ class CreateTasks < ActiveRecord::Migration[5.2]
       create table tasks (
         id integer NOT NULL default nextval('tasks_id_seq'),
         title text NOT NULL default '',
+        aggregate_id uuid,
         created_at timestamp,
         updated_at timestamp,
         primary key(id)

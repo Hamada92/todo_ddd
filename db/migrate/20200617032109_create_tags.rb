@@ -6,6 +6,7 @@ class CreateTags < ActiveRecord::Migration[5.2]
         id integer NOT NULL default nextval('tags_id_seq'),
         title text NOT NULL default '',
         code text NOT NULL default '',
+        aggregate_id uuid,
         created_at timestamp,
         updated_at timestamp,
         primary key(id)

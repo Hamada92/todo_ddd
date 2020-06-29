@@ -10,15 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_18_010911) do
+ActiveRecord::Schema.define(version: 2020_06_28_123456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "event_store_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "event_type", null: false
+    t.binary "metadata"
+    t.binary "data", null: false
+    t.datetime "created_at", null: false
+    t.index ["created_at"], name: "index_event_store_events_on_created_at"
+    t.index ["event_type"], name: "index_event_store_events_on_event_type"
+  end
+
+  create_table "event_store_events_in_streams", id: :serial, force: :cascade do |t|
+    t.string "stream", null: false
+    t.integer "position"
+    t.uuid "event_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["created_at"], name: "index_event_store_events_in_streams_on_created_at"
+    t.index ["stream", "event_id"], name: "index_event_store_events_in_streams_on_stream_and_event_id", unique: true
+    t.index ["stream", "position"], name: "index_event_store_events_in_streams_on_stream_and_position", unique: true
+  end
 
   create_table "tags", id: :serial, force: :cascade do |t|
     t.text "title", default: "", null: false
     t.text "code", default: "", null: false
+    t.uuid "aggregate_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["code"], name: "code_tags", unique: true
@@ -34,6 +55,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_010911) do
 
   create_table "tasks", id: :serial, force: :cascade do |t|
     t.text "title", default: "", null: false
+    t.uuid "aggregate_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -44,6 +66,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_010911) do
   create_view "task_with_associated_tags", sql_definition: <<-SQL
       SELECT tasks.id,
       tasks.title,
+      tasks.aggregate_id,
       tasks.created_at,
       tasks.updated_at,
       ( SELECT hstore(array_agg((tags.id)::text), array_agg(tags.title)) AS hstore
