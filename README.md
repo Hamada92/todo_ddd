@@ -9,3 +9,11 @@
 Main aggregate_root is task.rb under app/tasks/lib
 
 tasks_service under app/services.
+
+
+usage: 
+
+`rake db:create && rake db:migrate`
+then `bundle install`
+
+then `rails s`
