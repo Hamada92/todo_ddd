@@ -40,6 +40,7 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'factory_bot_rails'
   gem 'database_cleaner-active_record'
+  gem 'rails_event_store-rspec'
   gem 'simplecov', require: false
 end
 

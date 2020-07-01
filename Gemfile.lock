@@ -154,6 +154,8 @@ GEM
       rails_event_store_active_record (= 0.42.0)
       ruby_event_store (= 0.42.0)
       ruby_event_store-browser (= 0.42.0)
+    rails_event_store-rspec (1.0.0)
+      rspec (~> 3.0)
     rails_event_store_active_record (0.42.0)
       activemodel (>= 3.0)
       activerecord-import (>= 1.0.2)
@@ -170,6 +172,10 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rspec (3.9.0)
+      rspec-core (~> 3.9.0)
+      rspec-expectations (~> 3.9.0)
+      rspec-mocks (~> 3.9.0)
     rspec-core (3.9.1)
       rspec-support (~> 3.9.1)
     rspec-expectations (3.9.0)
@@ -254,6 +260,7 @@ DEPENDENCIES
   rails (~> 5.2.4, >= 5.2.4.1)
   rails-controller-testing
   rails_event_store
+  rails_event_store-rspec
   rspec-rails (~> 3.9)
   rspec_junit_formatter
   rubocop
