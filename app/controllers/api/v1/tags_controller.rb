@@ -4,11 +4,11 @@ module Api
   module V1
     class TagsController < ApplicationController
       def index
-        @tags = Tag.page(params[:page]).order('id asc')
+        @tags = TagRecord::Tag.page(params[:page]).order('id asc')
       end
 
       def create
-        @tag = Tag.new(tag_attributes)
+        @tag = TagRecord::Tag.new(tag_attributes)
         if @tag.save
           render 'show', status: :created
         else
@@ -17,7 +17,7 @@ module Api
       end
 
       def update
-        @tag = Tag.find(params[:id])
+        @tag = TagRecord::Tag.find(params[:id])
         if @tag.update(tag_attributes)
           render 'show'
         else
