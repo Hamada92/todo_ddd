@@ -3,15 +3,12 @@ require 'aggregate_root'
 module Tasks
   class Task
     include AggregateRoot
-    Invalid    = Class.new(StandardError)
 
     def initialize(aggregate_id:)
       @aggregate_id = aggregate_id
     end
 
     def submit(title:)
-      raise Invalid if title.blank?
-
       apply(TaskSubmitted.strict(data:
         {
           aggregate_id: aggregate_id,
@@ -20,8 +17,6 @@ module Tasks
     end
 
     def edit(title:)
-      raise Invalid if title.blank?
-
       apply(TaskUpdated.strict(data:
       {
         aggregate_id: aggregate_id,

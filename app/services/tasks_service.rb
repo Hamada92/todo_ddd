@@ -34,7 +34,7 @@ class TasksService
       stream) do |task|
       task.edit(title: cmd.title)
 
-      cmd.tags&.map(&:present?).each do |tag|
+      cmd.tags&.select(&:present?).each do |tag|
         task.add_tag(tag_title: tag)
       end
     end

@@ -23,6 +23,7 @@ module Api
       end
 
       def update
+
         task = TaskRecord::Task.find(params[:id])
         cmd = Tasks::UpdateTaskCommand.new(
           title: task_attributes[:title],
