@@ -19,19 +19,17 @@ class TasksService
 
   def submit(cmd)
     cmd.validate!
-    stream = "Task#{cmd.aggregate_id}"
     task = Tasks::Task.new(aggregate_id: cmd.aggregate_id)
 
     task.submit(title: cmd.title)
-    @repository.store(task, stream)
+    @repository.store(task, cmd.aggregate_id)
   end
 
   def edit(cmd)
     cmd.validate!
-    stream = "Task#{cmd.aggregate_id}"
     @repository.with_aggregate(
       Tasks::Task.new(aggregate_id: cmd.aggregate_id),
-      stream) do |task|
+      cmd.aggregate_id) do |task|
       task.edit(title: cmd.title)
 
       cmd.tags&.select(&:present?).each do |tag|
@@ -42,10 +40,9 @@ class TasksService
 
   def mark_deleted(cmd)
     cmd.validate!
-    stream = "Task#{cmd.aggregate_id}"
     @repository.with_aggregate(
       Tasks::Task.new(aggregate_id: cmd.aggregate_id),
-      stream) do |task|
+      cmd.aggregate_id) do |task|
       task.delete
     end
   end
