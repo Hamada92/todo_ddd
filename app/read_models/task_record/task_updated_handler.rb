@@ -1,5 +1,5 @@
 module TaskRecord
-  class TaskSubmittedHandler
+  class TaskUpdatedHandler
     def call(ev)
       TaskRecord::Task.find_by!(
         aggregate_id: ev.data.fetch(:aggregate_id)).update!(title: ev.data.fetch(:title))

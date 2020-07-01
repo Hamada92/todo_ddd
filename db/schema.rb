@@ -56,8 +56,10 @@ ActiveRecord::Schema.define(version: 2020_06_28_123456) do
   create_table "tasks", id: :serial, force: :cascade do |t|
     t.text "title", default: "", null: false
     t.uuid "aggregate_id"
+    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["aggregate_id"], name: "tasks_aggregate_id", unique: true
   end
 
   add_foreign_key "task_tags", "tags", name: "task_tags_tag_id_fkey", on_delete: :cascade
@@ -67,6 +69,7 @@ ActiveRecord::Schema.define(version: 2020_06_28_123456) do
       SELECT tasks.id,
       tasks.title,
       tasks.aggregate_id,
+      tasks.deleted_at,
       tasks.created_at,
       tasks.updated_at,
       ( SELECT hstore(array_agg((tags.id)::text), array_agg(tags.title)) AS hstore

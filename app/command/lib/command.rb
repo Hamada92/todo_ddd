@@ -1,13 +1,15 @@
 require 'active_model'
 
-module Command
+class Command
   ValidationError = Class.new(StandardError)
 
-  def self.included(base)
-    base.include ActiveModel::Model
-    base.include ActiveModel::Validations
-    base.include ActiveModel::Conversion
-  end
+  include ActiveModel::Model
+  include ActiveModel::Validations
+  include ActiveModel::Conversion
+
+  attr_accessor :aggregate_id
+
+  validates_presence_of :aggregate_id, message: "aggregate_id can't be blank"
 
   def validate!
     raise ValidationError, errors unless valid?

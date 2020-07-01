@@ -3,13 +3,15 @@ require 'aggregate_root'
 module Tasks
   class Task
     include AggregateRoot
+    Invalid    = Class.new(StandardError)
 
-    def initialize(aggregate_id:, title:)
+    def initialize(aggregate_id:)
       @aggregate_id = aggregate_id
-      @title = title
     end
 
-    def submit
+    def submit(title:)
+      raise Invalid if title.blank?
+
       apply(TaskSubmitted.strict(data:
         {
           aggregate_id: aggregate_id,
@@ -17,8 +19,10 @@ module Tasks
         }))
     end
 
-    def edit
-      apply(TaskTitleUpdated.strict(data:
+    def edit(title:)
+      raise Invalid if title.blank?
+
+      apply(TaskUpdated.strict(data:
       {
         aggregate_id: aggregate_id,
         title: title,
@@ -29,7 +33,14 @@ module Tasks
       apply(TagAdded.strict(data:
       {
         aggregate_id: aggregate_id,
-        title: tag_title,
+        tag_title: tag_title,
+      }))
+    end
+
+    def delete
+      apply(TaskDeleted.strict(data:
+      {
+        aggregate_id: aggregate_id
       }))
     end
 
@@ -41,11 +52,14 @@ module Tasks
     on TagAdded do |event|
     end
 
-    on TaskTitleUpdated do |event|
+    on TaskUpdated do |event|
       @title = event.data.fetch(:title)
     end
 
+    on TaskDeleted do |event|
+    end
+
     private
-    attr_reader :title, :aggregate_id
+    attr_reader :aggregate_id
   end
 end

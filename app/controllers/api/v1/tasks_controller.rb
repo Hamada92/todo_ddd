@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'securerandom'
 
 module Api
   module V1
@@ -8,40 +9,47 @@ module Api
       end
 
       def create
-        @task = Task.new(task_attributes)
-        if @task.save
-          @task_view = ::Views::TaskWithAssociatedTag.find(@task.id)
-          render 'show', status: :created
-        else
-          @errors = @task.errors
-          render 'api/v1/errors/errors', status: :unprocessable_entity
-        end
+        cmd = Tasks::SubmitTaskCommand.new(
+          title: task_attributes[:title],
+          aggregate_id: new_aggregate_id)
+
+        TasksService.new.call(cmd)
+        @task_view = ::Views::TaskWithAssociatedTag.find_by(aggregate_id: cmd.aggregate_id)
+        render 'show', status: :created
+
+      rescue Command::ValidationError
+        @errors = cmd.errors
+        render 'api/v1/errors/errors', status: :unprocessable_entity
       end
 
       def update
-        task = Task.find(params[:id])
-        service = ::Updaters::Factory.build(task, task_params)
-        service.call
+        task = TaskRecord::Task.find(params[:id])
+        cmd = Tasks::UpdateTaskCommand.new(
+          title: task_attributes[:title],
+          tags: task_attributes[:tags],
+          aggregate_id: task.aggregate_id)
 
-        if service.errors.present?
-          @errors = service.errors
-          render 'api/v1/errors/errors', status: :unprocessable_entity
-          return
-        end
-
-        @task_view = ::Views::TaskWithAssociatedTag.find(params[:id])
+        TasksService.new.call(cmd)
+        @task_view = ::Views::TaskWithAssociatedTag.find_by(aggregate_id: cmd.aggregate_id)
         render 'show'
+
+      rescue Command::ValidationError
+        @errors = cmd.errors
+        render 'api/v1/errors/errors', status: :unprocessable_entity
       end
 
       def destroy
-        @task = Task.find_by(id: params[:id])
+        task = TaskRecord::Task.find_by(id: params[:id])
 
-        if @task.blank?
+        if task.blank? || task.deleted_at?
           head :not_found
           return
         end
 
-        @task.destroy
+        cmd = Tasks::DeleteTaskCommand.new(
+          aggregate_id: task.aggregate_id)
+        TasksService.new.call(cmd)
+
         head :no_content
       end
 

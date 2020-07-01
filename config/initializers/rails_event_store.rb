@@ -9,7 +9,11 @@ Rails.application.config.event_store.tap do |es|
   }, to: [Tasks::TagAdded] )
 
   es.subscribe(->(event){
-    TaskRecord::TaskTitleUpdatedHandler.new.call(event)
-  }, to: [Tasks::TaskTitleUpdated] )
+    TaskRecord::TaskUpdatedHandler.new.call(event)
+  }, to: [Tasks::TaskUpdated] )
+
+  es.subscribe(->(event){
+    TaskRecord::TaskDeletedHandler.new.call(event)
+  }, to: [Tasks::TaskDeleted] )
 
 end

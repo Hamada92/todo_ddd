@@ -1,17 +1,23 @@
 module Tasks
-  class SubmitTaskCommand
-    include Command
+  class TaskCommand < Command
 
-    attr_accessor :title
+    attr_reader :title
+    validates_presence_of :title, message: "Task Title can't be blank"
 
-    validates_presence_of :title
+    def title=(title)
+      @title = String(title)
+    end
   end
 
-  class UpdateTaskTitleCommand
-    include Command
+  class SubmitTaskCommand < TaskCommand; end
+  class UpdateTaskCommand < TaskCommand
+    attr_reader :tags
 
-    attr_accessor :title, :aggregate_id
-
-    validates_presence_of :title
+    def tags=(tags)
+      @tags = Array(tags)
+    end
   end
+
+  class DeleteTaskCommand < Command; end
+
 end

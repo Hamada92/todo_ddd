@@ -6,11 +6,12 @@ class CreateTasks < ActiveRecord::Migration[5.2]
         id integer NOT NULL default nextval('tasks_id_seq'),
         title text NOT NULL default '',
         aggregate_id uuid,
+        deleted_at timestamp,
         created_at timestamp,
         updated_at timestamp,
         primary key(id)
       );
-
+      CREATE UNIQUE INDEX tasks_aggregate_id on tasks(aggregate_id);
     SQL
   end
 

@@ -17,6 +17,18 @@ module Tasks
   class TagAdded < RailsEventStore::Event
     SCHEMA = {
       aggregate_id: String,
+      tag_title: String,
+    }.freeze
+
+    def self.strict(data:)
+      ClassyHash.validate(data, SCHEMA)
+      new(data: data)
+    end
+  end
+
+  class TaskUpdated < RailsEventStore::Event
+    SCHEMA = {
+      aggregate_id: String,
       title: String
     }.freeze
 
@@ -26,10 +38,9 @@ module Tasks
     end
   end
 
-  class TaskTitleUpdated < RailsEventStore::Event
+  class TaskDeleted < RailsEventStore::Event
     SCHEMA = {
       aggregate_id: String,
-      title: String
     }.freeze
 
     def self.strict(data:)
