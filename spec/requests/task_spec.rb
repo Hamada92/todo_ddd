@@ -32,7 +32,7 @@ RSpec.describe "Task", :type => :request do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:errors)
-        expect(JSON.parse(response.body)["errors"][0]["detail"][0]).to include("title is required")
+        expect(JSON.parse(response.body)["errors"][0]["detail"][0]).to include("Task Title can't be blank")
 
       end
     end
@@ -42,7 +42,7 @@ RSpec.describe "Task", :type => :request do
         patch "/api/v1/tasks/#{task.id}", params: { data: { attributes: {title:  "Test Task", tags: ["Today", "Tomorrow"]} } }, :headers => headers
 
         expect(response).to have_http_status(:ok)
-        expect(task.tags.map(&:title)).to eq(["Today", "Tomorrow"])
+        expect(Views::TaskWithAssociatedTag.first.tags.values).to eq(["Today", "Tomorrow"])
       end
     end
   end
