@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'securerandom'
 
 module Api
@@ -11,29 +12,28 @@ module Api
       def create
         cmd = Tasks::SubmitTaskCommand.new(
           title: task_attributes[:title],
-          aggregate_id: new_aggregate_id)
+          aggregate_id: new_aggregate_id
+        )
 
         TasksService.new.call(cmd)
         @task_view = ::Views::TaskWithAssociatedTag.find_by(aggregate_id: cmd.aggregate_id)
         render 'show', status: :created
-
       rescue Command::ValidationError
         @errors = cmd.errors
         render 'api/v1/errors/errors', status: :unprocessable_entity
       end
 
       def update
-
         task = TaskRecord::Task.find(params[:id])
         cmd = Tasks::UpdateTaskCommand.new(
           title: task_attributes[:title],
           tags: task_attributes[:tags],
-          aggregate_id: task.aggregate_id)
+          aggregate_id: task.aggregate_id
+        )
 
         TasksService.new.call(cmd)
         @task_view = ::Views::TaskWithAssociatedTag.find_by(aggregate_id: cmd.aggregate_id)
         render 'show'
-
       rescue Command::ValidationError
         @errors = cmd.errors
         render 'api/v1/errors/errors', status: :unprocessable_entity
@@ -48,7 +48,8 @@ module Api
         end
 
         cmd = Tasks::DeleteTaskCommand.new(
-          aggregate_id: task.aggregate_id)
+          aggregate_id: task.aggregate_id
+        )
         TasksService.new.call(cmd)
 
         head :no_content
@@ -57,7 +58,7 @@ module Api
       private
 
       def task_params
-        params.require(:data).permit(:type, attributes: [:title, tags: [] ] )
+        params.require(:data).permit(:type, attributes: [:title, tags: []])
       end
 
       def task_attributes
