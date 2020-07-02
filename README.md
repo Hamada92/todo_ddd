@@ -17,3 +17,8 @@ usage:
 then `bundle install`
 
 then `rails s`
+
+
+To do:
+1. Repository pattern.
+2. Async event handlers.
