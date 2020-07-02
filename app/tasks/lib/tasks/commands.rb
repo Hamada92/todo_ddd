@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Tasks
   class TaskCommand < Command
-
     attr_reader :title
     validates_presence_of :title, message: "Task Title can't be blank"
 
@@ -19,5 +20,4 @@ module Tasks
   end
 
   class DeleteTaskCommand < Command; end
-
 end

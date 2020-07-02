@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'aggregate_root'
 
 module Tasks
@@ -12,7 +14,7 @@ module Tasks
       apply(TaskSubmitted.strict(data:
         {
           aggregate_id: aggregate_id,
-          title: title,
+          title: title
         }))
     end
 
@@ -20,7 +22,7 @@ module Tasks
       apply(TaskUpdated.strict(data:
       {
         aggregate_id: aggregate_id,
-        title: title,
+        title: title
       }))
     end
 
@@ -28,7 +30,7 @@ module Tasks
       apply(TagAdded.strict(data:
       {
         aggregate_id: aggregate_id,
-        tag_title: tag_title,
+        tag_title: tag_title
       }))
     end
 
@@ -55,6 +57,7 @@ module Tasks
     end
 
     private
+
     attr_reader :aggregate_id
   end
 end

@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'ruby_event_store'
 
 module Tasks
-
   class TaskSubmitted < RailsEventStore::Event
     SCHEMA = {
       aggregate_id: String,
-      title: String,
+      title: String
     }.freeze
 
     def self.strict(data:)
@@ -17,7 +18,7 @@ module Tasks
   class TagAdded < RailsEventStore::Event
     SCHEMA = {
       aggregate_id: String,
-      tag_title: String,
+      tag_title: String
     }.freeze
 
     def self.strict(data:)
@@ -40,7 +41,7 @@ module Tasks
 
   class TaskDeleted < RailsEventStore::Event
     SCHEMA = {
-      aggregate_id: String,
+      aggregate_id: String
     }.freeze
 
     def self.strict(data:)
